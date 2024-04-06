@@ -8,8 +8,11 @@
     "install-front": "cd frontend && npm i",
     "install-back": "cd backend && cd src && npm i",
     "client": "cd frontend && npm run dev",
-    "server" : "cd backend && cd src && npm start"
+    "server": "cd backend && cd src && npm start"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "redis": "^4.6.13"
+  }
 }

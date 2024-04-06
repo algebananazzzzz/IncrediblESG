@@ -40,7 +40,7 @@ resource "aws_scheduler_schedule" "rate_5" {
     mode = "OFF"
   }
   schedule_expression = "rate(5 minutes)"
-  start_date          = "2024-04-06T10:40:00Z"
+  start_date          = "2024-04-06T11:00:00Z"
 
   target {
     arn      = module.lambda_function.function.arn

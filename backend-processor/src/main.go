@@ -13,6 +13,8 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
+// var firehoseClient *firehose.Client
+
 type RequestObject struct {
 	UserId      string `json:"user_id"`
 	MetricId    string `json:"metric_id"`
@@ -62,19 +64,19 @@ func ApiRequestHandler(ctx context.Context, req events.APIGatewayProxyRequest) (
 	var metricAverageData MetricAverage
 
 	if data, err := getAverageData(requestObject.MetricId); err != nil {
-		log.Panic(err)
+		log.Panicln("GET_AVERAGE", err)
 	} else {
 		metricAverageData = updateAverage(requestObject.MetricValue, *data)
 	}
 
 	if err := dumpAverage(metricAverageData); err != nil {
-		log.Panic(err)
+		log.Panicln("DUMP_AVERAGE", err)
 	}
 
 	score := calculateDeviation(requestObject.MetricValue, metricAverageData)
 
-	if err := dumpUserData(requestObject.UserId, score); err != nil {
-		log.Panic(err)
+	if err := dumpUserData(requestObject.UserId, requestObject.MetricId, requestObject.MetricValue); err != nil {
+		log.Panicln("DUMP_USER", err)
 	}
 
 	responseObject := ResponseObject{
@@ -96,21 +98,30 @@ func SchedulerEventHandler(ctx context.Context, req SchedulerEvent) error {
 	case "reset_cache":
 		metricIds, err := getMetricIds()
 		if err != nil {
-			return err
+			log.Fatal(err)
 		}
 		for _, metricId := range metricIds {
 			if data, err := getAverageData(metricId); err != nil {
-				return err
+				log.Fatal(err)
 			} else {
 				data.NumberOfRecords = 1
 				if err := dumpAverage(*data); err != nil {
-					return err
+					log.Fatal(err)
 				}
 			}
 		}
 	}
 	return nil
 }
+
+// func init() {
+// 	cfg, err := config.LoadDefaultConfig(context.TODO())
+// 	if err != nil {
+// 		log.Fatalf("unable to load SDK config, %v", err)
+// 	}
+
+// 	firehoseClient = firehose.NewFromConfig(cfg)
+// }
 
 func main() {
 	if os.Getenv("LAMBDA_TASK_ROOT") != "" {

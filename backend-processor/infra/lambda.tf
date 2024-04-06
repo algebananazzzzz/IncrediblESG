@@ -28,6 +28,20 @@ module "function_execution_role" {
         ]
         resources = ["*"]
       }
+      allowDynamodb = {
+        effect = "Allow"
+        actions = [
+          "dynamodb:*"
+        ]
+        resources = ["*"]
+      }
+      allowFirehose = {
+        effect = "Allow"
+        actions = [
+          "firehose:*"
+        ]
+        resources = ["*"]
+      }
     }
   }
 }
@@ -38,8 +52,11 @@ module "lambda_function" {
   runtime       = "provided.al2"
   handler       = "bootstrap"
   environment_variables = {
-    REDIS_ADDR = "${data.aws_ssm_parameter.address.value}:6379"
-    REDIS_KEY  = var.project_code
+    REDIS_ADDR                = "${data.aws_ssm_parameter.address.value}:6379"
+    REDIS_KEY                 = var.project_code
+    DYNAMODB_USER_TABLENAME   = aws_dynamodb_table.user_table.name
+    DYNAMODB_METRIC_TABLENAME = aws_dynamodb_table.metric_table.name
+    # FIREHOSE_STREAM_NAME      = aws_kinesis_firehose_delivery_stream.extended_s3_stream.name
   }
   execution_role_arn = module.function_execution_role.role.arn
   deployment_package = {

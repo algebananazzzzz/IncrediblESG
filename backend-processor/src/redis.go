@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/redis/go-redis/v9"
 )
@@ -17,6 +18,12 @@ type MetricAverage struct {
 	Min             int64  `json:"min"`
 	NumberOfRecords int64  `json:"number"`
 	Positive        bool   `json:"positive"`
+}
+
+type UserMetricData struct {
+	MetricId  string `json:"metric_id"`
+	Value     int64  `json:"value"`
+	Timestamp int64  `json:"timestamp"`
 }
 
 var ctx = context.Background()
@@ -75,8 +82,40 @@ func dumpAverage(data MetricAverage) error {
 	return nil
 }
 
-func dumpUserData(userId string, score int) error {
-	if err := redisClient.HSet(ctx, os.Getenv("REDIS_KEY"), fmt.Sprintf("user:%v", userId), string(score)).Err(); err != nil && err != redis.Nil {
+func getUserData(userId string) (map[string]UserMetricData, error) {
+
+	userData, err := redisClient.HGet(ctx, os.Getenv("REDIS_KEY"), fmt.Sprintf("user:%v", userId)).Result()
+	if err == redis.Nil {
+		return map[string]UserMetricData{}, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	var data map[string]UserMetricData
+	if err := json.Unmarshal([]byte(userData), &data); err != nil {
+		return nil, err
+	}
+
+	return data, nil
+}
+
+func dumpUserData(userId string, metricId string, value int64) error {
+	data, err := getUserData(userId)
+	if err != nil {
+		return err
+	}
+
+	data[metricId] = UserMetricData{
+		Value:     value,
+		MetricId:  metricId,
+		Timestamp: time.Now().Unix(),
+	}
+	redisData, err := json.Marshal(data)
+	if err != nil {
+		return err
+	}
+	if err := redisClient.HSet(ctx, os.Getenv("REDIS_KEY"), fmt.Sprintf("user:%v", userId), redisData).Err(); err != nil && err != redis.Nil {
 		return err
 	}
 	return nil
