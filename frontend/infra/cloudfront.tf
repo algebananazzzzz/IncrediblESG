@@ -14,4 +14,10 @@ module "cloudfront_s3_origin" {
   } : null
   route53_create_records = local.use_custom_aliases ? true : false
   route53_zone_id        = local.use_custom_aliases ? data.aws_route53_zone.public[0].id : null
+
+  cloudfront_custom_error_response = [{
+    error_code         = 404
+    response_code      = 404
+    response_page_path = "/_not-found.html"
+  }]
 }
