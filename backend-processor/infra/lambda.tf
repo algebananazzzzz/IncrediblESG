@@ -39,6 +39,7 @@ module "lambda_function" {
   handler       = "bootstrap"
   environment_variables = {
     REDIS_ADDR = "${data.aws_ssm_parameter.address.value}:6379"
+    REDIS_KEY  = var.project_code
   }
   execution_role_arn = module.function_execution_role.role.arn
   deployment_package = {

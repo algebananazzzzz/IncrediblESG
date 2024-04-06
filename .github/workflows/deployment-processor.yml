@@ -1,4 +1,4 @@
-name: Deployment
+name: Deployment Processor
 on:
   push:
     branches:
