@@ -15,10 +15,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-node@v4
         with:
-          go-version: "^1.21.0"
-          cache-dependency-path: "**/go.sum"
+          node-version: '18.x'
       - working-directory: backend/src
         run:  npm install 
       - working-directory: backend/src
