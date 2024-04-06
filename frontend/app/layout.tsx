@@ -4,6 +4,7 @@ import "./globals.css";
 import { Providers } from "@/app/providers";
 import { Navbar } from "@/Components/Navigation/Navbar/Navbar";
 import { Form } from "@/Components/Form/Form";
+import { ChakraBaseProvider, ChakraProvider } from "@chakra-ui/react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,11 +21,10 @@ export default function RootLayout({
     return(
         <html lang="en">
             <body className={inter.className}>
+              <Providers>
                 <Navbar/>
                 <Form />
-                <Providers>
-                    {children}
-                </Providers>
+              </Providers>
             </body>
         </html>
     );

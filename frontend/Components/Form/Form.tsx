@@ -1,12 +1,21 @@
 'use client'
 
-import { Input } from '@chakra-ui/react'
+import { FormControl, FormLabel, Input, InputGroup,InputLeftAddon,  InputRightElement } from '@chakra-ui/react'
 
 export const Form = () => {
     return (
         <>
-            <Input placeholder='Enter Number of Employees'/>
-            <Input placeholder='Enter CO2 Emissions'/>
+            <FormControl>
+                <FormLabel>Number of Employees</FormLabel>
+                <Input />
+                <FormLabel>Annual CO2 Emissions</FormLabel>
+                <Input />
+                <FormLabel>Annual Electricty Consumption (kwH)</FormLabel>
+                <Input />
+                <FormLabel>Annual Water Consumption (kL)</FormLabel>
+                <Input />
+            </FormControl>
+
         </>
     );
 };
