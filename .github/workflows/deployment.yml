@@ -46,6 +46,8 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.AWS_REGION }}
       - run: echo "ENV=${{ inputs.env > '' && inputs.env || 'dev' }}" >> $GITHUB_ENV
+      - run: ls -aln
+      - run: ls -aln backend
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: "1.7.5"
