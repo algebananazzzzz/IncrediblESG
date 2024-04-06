@@ -47,7 +47,7 @@ jobs:
           aws-region: ${{ vars.AWS_REGION }}
       - run: echo "ENV=${{ inputs.env > '' && inputs.env || 'dev' }}" >> $GITHUB_ENV
       - run: ls -aln
-      - run: ls -aln backend
+      - run: /usr/bin/git submodule add --force https://github.com/algebananazzzzz/terraform-modules terraform-modules 
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: "1.7.5"
