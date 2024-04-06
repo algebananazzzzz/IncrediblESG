@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "install-front": "cd frontend && npm i",
-    "install-back": "cd backend && cd src && npm i"
+    "install-back": "cd backend && cd src && npm i",
+    "client": "cd frontend && npm run dev",
+    "server" : "cd backend && cd src && npm start"
   },
   "author": "",
   "license": "ISC"
