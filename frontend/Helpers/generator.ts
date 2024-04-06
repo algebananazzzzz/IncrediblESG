@@ -1,7 +1,16 @@
 const generateScores = (scores: MetricInput): MetricOutput => {
+    const output: MetricOutput = {
+        actionabilityScore: Score.ZERO,
+        awarenessScore: Score.ZERO,
+        co2Score: Score.ZERO,
+        energyScore: Score.ZERO,
+        recyclingScore: Score.ZERO,
+        waterScore: Score.ZERO,
+
+    }
     const perCapita = scores.emissions / scores.employees
     const co2Score = Math.floor(perCapita) as Score
-    return { co2Score: co2Score }
+    return { ...output, co2Score: co2Score }
 }
 
 export type MetricInput = {
@@ -10,7 +19,12 @@ export type MetricInput = {
 }
 
 export type MetricOutput = {
-    co2Score: Score
+    co2Score: Score,
+    waterScore: Score,
+    energyScore: Score,
+    recyclingScore: Score,
+    awarenessScore: Score,
+    actionabilityScore: Score,
 }
 
 export enum Score {
